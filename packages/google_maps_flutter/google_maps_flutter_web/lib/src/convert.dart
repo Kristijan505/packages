@@ -285,6 +285,15 @@ gmaps.Icon? _gmIconFromBitmapDescriptor(BitmapDescriptor bitmapDescriptor) {
     }
   }
 
+  final gmaps.Size? anchor = icon?.size;
+
+  icon?.anchor = anchor == null
+      ? null
+      : gmaps.Point(
+          anchor.width! / 2,
+          anchor.height! / 2,
+        );
+
   return icon;
 }
 
