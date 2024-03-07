@@ -5,7 +5,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart' show BinaryMessenger;
-import 'package:meta/meta.dart' show protected;
+import 'package:meta/meta.dart' show immutable, protected;
 
 import 'android_camera_camerax_flutter_api_impls.dart';
 import 'camerax_library.g.dart';
@@ -16,6 +16,7 @@ import 'plane_proxy.dart';
 /// Representation of a single complete image buffer.
 ///
 /// See https://developer.android.com/reference/androidx/camera/core/ImageProxy.
+@immutable
 class ImageProxy extends JavaObject {
   /// Constructs a [ImageProxy] that is not automatically attached to a native object.
   ImageProxy.detached(
@@ -99,19 +100,24 @@ class _ImageProxyHostApiImpl extends ImageProxyHostApi {
 @protected
 class ImageProxyFlutterApiImpl implements ImageProxyFlutterApi {
   /// Constructs a [ImageProxyFlutterApiImpl].
+  ///
+  /// If [binaryMessenger] is null, the default [BinaryMessenger] will be used,
+  /// which routes to the host platform.
+  ///
+  /// An [instanceManager] is typically passed when a copy of an instance
+  /// contained by an [InstanceManager] is being created. If left null, it
+  /// will default to the global instance defined in [JavaObject].
   ImageProxyFlutterApiImpl({
-    this.binaryMessenger,
+    BinaryMessenger? binaryMessenger,
     InstanceManager? instanceManager,
-  }) : instanceManager = instanceManager ?? JavaObject.globalInstanceManager;
+  })  : _binaryMessenger = binaryMessenger,
+        _instanceManager = instanceManager ?? JavaObject.globalInstanceManager;
 
   /// Receives binary data across the Flutter platform barrier.
-  ///
-  /// If it is null, the default BinaryMessenger will be used which routes to
-  /// the host platform.
-  final BinaryMessenger? binaryMessenger;
+  final BinaryMessenger? _binaryMessenger;
 
   /// Maintains instances stored to communicate with native language objects.
-  final InstanceManager instanceManager;
+  final InstanceManager _instanceManager;
 
   @override
   void create(
@@ -120,18 +126,18 @@ class ImageProxyFlutterApiImpl implements ImageProxyFlutterApi {
     int height,
     int width,
   ) {
-    instanceManager.addHostCreatedInstance(
+    _instanceManager.addHostCreatedInstance(
       ImageProxy.detached(
-        binaryMessenger: binaryMessenger,
-        instanceManager: instanceManager,
+        binaryMessenger: _binaryMessenger,
+        instanceManager: _instanceManager,
         format: format,
         height: height,
         width: width,
       ),
       identifier,
       onCopy: (ImageProxy original) => ImageProxy.detached(
-          binaryMessenger: binaryMessenger,
-          instanceManager: instanceManager,
+          binaryMessenger: _binaryMessenger,
+          instanceManager: _instanceManager,
           format: original.format,
           height: original.height,
           width: original.width),

@@ -17,11 +17,48 @@
 
 version: 1
 transforms:
+  - title: "Replaces 'location' in 'GoRouterState' with `uri.toString()`"
+    date: 2023-07-06
+    bulkApply: true
+    element:
+      # TODO(ahmednfwela): Workaround for https://github.com/dart-lang/sdk/issues/52233
+      uris: [ 'go_router.dart', 'package:go_router/go_router.dart' ]
+      field: 'location'
+      inClass: 'GoRouterState'
+    changes:
+      - kind: 'rename'
+        newName: 'uri.toString()'
+
+  - title: "Replaces 'queryParameters' in 'GoRouterState' with `uri.queryParameters`"
+    date: 2023-07-06
+    bulkApply: true
+    element:
+      # TODO(ahmednfwela): Workaround for https://github.com/dart-lang/sdk/issues/52233
+      uris: [ 'go_router.dart', 'package:go_router/go_router.dart' ]
+      field: 'queryParameters'
+      inClass: 'GoRouterState'
+    changes:
+      - kind: 'rename'
+        newName: 'uri.queryParameters'
+
+  - title: "Replaces 'queryParametersAll' in 'GoRouterState' with `uri.queryParametersAll`"
+    date: 2023-07-06
+    bulkApply: true
+    element:
+      # TODO(ahmednfwela): Workaround for https://github.com/dart-lang/sdk/issues/52233
+      uris: [ 'go_router.dart', 'package:go_router/go_router.dart' ]
+      field: 'queryParametersAll'
+      inClass: 'GoRouterState'
+    changes:
+      - kind: 'rename'
+        newName: 'uri.queryParametersAll'
+
   - title: "Replaces 'params' and 'queryParams' in 'GoRouter.replaceNamed' with `pathParameters` and `queryParameters`"
     date: 2023-04-24
     bulkApply: true
     element:
-      uris: [ 'go_router.dart' ]
+      # TODO(ahmednfwela): Workaround for https://github.com/dart-lang/sdk/issues/52233
+      uris: [ 'go_router.dart', 'package:go_router/go_router.dart' ]
       method: 'replaceNamed'
       inClass: 'GoRouter'
     changes:
@@ -35,7 +72,8 @@ transforms:
     date: 2023-04-24
     bulkApply: true
     element:
-      uris: [ 'go_router.dart' ]
+      # TODO(ahmednfwela): Workaround for https://github.com/dart-lang/sdk/issues/52233
+      uris: [ 'go_router.dart', 'package:go_router/go_router.dart' ]
       method: 'pushReplacementNamed'
       inClass: 'GoRouter'
     changes:
@@ -50,7 +88,8 @@ transforms:
     date: 2023-04-24
     bulkApply: true
     element:
-      uris: [ 'go_router.dart' ]
+      # TODO(ahmednfwela): Workaround for https://github.com/dart-lang/sdk/issues/52233
+      uris: [ 'go_router.dart', 'package:go_router/go_router.dart' ]
       method: 'pushNamed'
       inClass: 'GoRouter'
     changes:
@@ -65,7 +104,8 @@ transforms:
     date: 2023-04-24
     bulkApply: true
     element:
-      uris: [ 'go_router.dart' ]
+      # TODO(ahmednfwela): Workaround for https://github.com/dart-lang/sdk/issues/52233
+      uris: [ 'go_router.dart', 'package:go_router/go_router.dart' ]
       method: 'goNamed'
       inClass: 'GoRouter'
     changes:
@@ -80,7 +120,8 @@ transforms:
     date: 2023-04-24
     bulkApply: true
     element:
-      uris: [ 'go_router.dart' ]
+      # TODO(ahmednfwela): Workaround for https://github.com/dart-lang/sdk/issues/52233
+      uris: [ 'go_router.dart', 'package:go_router/go_router.dart' ]
       method: 'namedLocation'
       inClass: 'GoRouter'
     changes:
@@ -95,7 +136,8 @@ transforms:
     date: 2023-04-24
     bulkApply: true
     element:
-      uris: [ 'go_router.dart' ]
+      # TODO(ahmednfwela): Workaround for https://github.com/dart-lang/sdk/issues/52233
+      uris: [ 'go_router.dart', 'package:go_router/go_router.dart' ]
       method: 'namedLocation'
       inClass: 'GoRouterState'
     changes:
@@ -110,7 +152,8 @@ transforms:
     date: 2023-04-24
     bulkApply: true
     element:
-      uris: [ 'go_router.dart' ]
+      # TODO(ahmednfwela): Workaround for https://github.com/dart-lang/sdk/issues/52233
+      uris: [ 'go_router.dart', 'package:go_router/go_router.dart' ]
       field: 'queryParams'
       inClass: 'GoRouterState'
     changes:
@@ -121,7 +164,8 @@ transforms:
     date: 2023-04-24
     bulkApply: true
     element:
-      uris: [ 'go_router.dart' ]
+      # TODO(ahmednfwela): Workaround for https://github.com/dart-lang/sdk/issues/52233
+      uris: [ 'go_router.dart', 'package:go_router/go_router.dart' ]
       field: 'fullpath'
       inClass: 'GoRouterState'
     changes:
@@ -132,7 +176,8 @@ transforms:
     date: 2023-04-24
     bulkApply: true
     element:
-      uris: [ 'go_router.dart' ]
+      # TODO(ahmednfwela): Workaround for https://github.com/dart-lang/sdk/issues/52233
+      uris: [ 'go_router.dart', 'package:go_router/go_router.dart' ]
       field: 'params'
       inClass: 'GoRouterState'
     changes:
@@ -143,7 +188,8 @@ transforms:
     date: 2023-04-24
     bulkApply: true
     element:
-      uris: [ 'go_router.dart' ]
+      # TODO(ahmednfwela): Workaround for https://github.com/dart-lang/sdk/issues/52233
+      uris: [ 'go_router.dart', 'package:go_router/go_router.dart' ]
       field: 'subloc'
       inClass: 'GoRouterState'
     changes:

@@ -5,7 +5,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart' show BinaryMessenger;
-import 'package:meta/meta.dart' show protected;
+import 'package:meta/meta.dart' show immutable, protected;
 
 import 'android_camera_camerax_flutter_api_impls.dart';
 import 'camerax_library.g.dart';
@@ -16,6 +16,7 @@ import 'java_object.dart';
 /// Wrapper of callback for analyzing images.
 ///
 /// See https://developer.android.com/reference/androidx/camera/core/ImageAnalysis.Analyzer.
+@immutable
 class Analyzer extends JavaObject {
   /// Creates an [Analyzer].
   Analyzer(
@@ -87,35 +88,40 @@ class _AnalyzerHostApiImpl extends AnalyzerHostApi {
 @protected
 class AnalyzerFlutterApiImpl implements AnalyzerFlutterApi {
   /// Constructs a [AnalyzerFlutterApiImpl].
+  ///
+  /// If [binaryMessenger] is null, the default [BinaryMessenger] will be used,
+  /// which routes to the host platform.
+  ///
+  /// An [instanceManager] is typically passed when a copy of an instance
+  /// contained by an [InstanceManager] is being created. If left null, it
+  /// will default to the global instance defined in [JavaObject].
   AnalyzerFlutterApiImpl({
-    this.binaryMessenger,
+    BinaryMessenger? binaryMessenger,
     InstanceManager? instanceManager,
-  }) : instanceManager = instanceManager ?? JavaObject.globalInstanceManager;
+  })  : _binaryMessenger = binaryMessenger,
+        _instanceManager = instanceManager ?? JavaObject.globalInstanceManager;
 
   /// Receives binary data across the Flutter platform barrier.
-  ///
-  /// If it is null, the default BinaryMessenger will be used which routes to
-  /// the host platform.
-  final BinaryMessenger? binaryMessenger;
+  final BinaryMessenger? _binaryMessenger;
 
   /// Maintains instances stored to communicate with native language objects.
-  final InstanceManager instanceManager;
+  final InstanceManager _instanceManager;
 
   @override
   void create(
     int identifier,
   ) {
-    instanceManager.addHostCreatedInstance(
+    _instanceManager.addHostCreatedInstance(
       Analyzer.detached(
         analyze: (ImageProxy imageProxy) async {},
-        binaryMessenger: binaryMessenger,
-        instanceManager: instanceManager,
+        binaryMessenger: _binaryMessenger,
+        instanceManager: _instanceManager,
       ),
       identifier,
       onCopy: (Analyzer original) => Analyzer.detached(
         analyze: original.analyze,
-        binaryMessenger: binaryMessenger,
-        instanceManager: instanceManager,
+        binaryMessenger: _binaryMessenger,
+        instanceManager: _instanceManager,
       ),
     );
   }
@@ -126,9 +132,9 @@ class AnalyzerFlutterApiImpl implements AnalyzerFlutterApi {
     int imageProxyIdentifier,
   ) {
     final Analyzer instance =
-        instanceManager.getInstanceWithWeakReference(identifier)!;
+        _instanceManager.getInstanceWithWeakReference(identifier)!;
     final ImageProxy imageProxy =
-        instanceManager.getInstanceWithWeakReference(imageProxyIdentifier)!;
+        _instanceManager.getInstanceWithWeakReference(imageProxyIdentifier)!;
     instance.analyze(
       imageProxy,
     );

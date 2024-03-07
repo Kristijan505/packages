@@ -2,7 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// ignore_for_file: public_member_api_docs
+// ignore_for_file: public_member_api_docs, unreachable_from_main
+
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -24,9 +26,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) => ChangeNotifierProvider<LoginInfo>.value(
         value: loginInfo,
         child: MaterialApp.router(
-          routeInformationParser: _router.routeInformationParser,
-          routerDelegate: _router.routerDelegate,
-          routeInformationProvider: _router.routeInformationProvider,
+          routerConfig: _router,
           title: title,
           debugShowCheckedModeBanner: false,
         ),
@@ -179,13 +179,13 @@ class HomeScreen extends StatelessWidget {
                 PopupMenuItem<String>(
                   value: '1',
                   child: const Text('Push w/o return value'),
-                  onTap: () => const PersonRoute('f1', 1).push(context),
+                  onTap: () => const PersonRoute('f1', 1).push<void>(context),
                 ),
                 PopupMenuItem<String>(
                   value: '2',
                   child: const Text('Push w/ return value'),
                   onTap: () async {
-                    FamilyCountRoute(familyData.length)
+                    unawaited(FamilyCountRoute(familyData.length)
                         .push<int>(context)
                         .then((int? value) {
                       if (value != null) {
@@ -195,7 +195,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                         );
                       }
-                    });
+                    }));
                   },
                 ),
                 PopupMenuItem<String>(
@@ -257,7 +257,7 @@ class PersonScreen extends StatelessWidget {
               title: Text(
                   '${person.name} ${family.name} is ${person.age} years old'),
             ),
-            for (MapEntry<PersonDetails, String> entry
+            for (final MapEntry<PersonDetails, String> entry
                 in person.details.entries)
               ListTile(
                 title: Text(
